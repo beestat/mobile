@@ -34,7 +34,7 @@ dependencies:
   webview_flutter: ^4.4.1
 
 flutter_icons:
-  # android: false
+  android: false
   # image_path: "assets/icon-android-adaptive.png"
   # adaptive_icon_foreground: "assets/icon.png"
   # adaptive_icon_background: "#37474f"
