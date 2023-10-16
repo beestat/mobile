@@ -45,10 +45,24 @@ class BeestatWidgetState extends State<BeestatWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromRGBO(55, 71, 79, 1),
-        body: WebViewWidget(
+      backgroundColor: Color.fromRGBO(55, 71, 79, 1),
+      body: SafeArea(
+        child: WebViewWidget(
           controller: controller
         )
-      );
+      )
+    );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return SafeArea(
+  //     child: Scaffold(
+  //       backgroundColor: Color.fromRGBO(55, 71, 79, 1),
+  //       body: WebViewWidget(
+  //         controller: controller
+  //       )
+  //     )
+  //   );
+  // }
 }
