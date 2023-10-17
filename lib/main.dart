@@ -53,14 +53,17 @@ class BeestatWidgetState extends State<BeestatWidget> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onNavigationRequest: (NavigationRequest request) {
-            print(request.url);
             if (request.url.startsWith('https://app.beestat.io')) {
               return NavigationDecision.navigate;
             } else if (request.url.startsWith('data:')) {
               saveBase64StringToFile(request.url, 'beestat.png');
               return NavigationDecision.prevent;
             } else if (request.url.startsWith('mailto:')) {
-              launchUrl(Uri.parse(request.url), mode: LaunchMode.externalNonBrowserApplication);
+              final Uri emailLaunchUri = Uri(
+                scheme: 'mailto',
+                path: request.url.replaceFirst('mailto:', '')
+              );
+              launchUrl(emailLaunchUri);              
               return NavigationDecision.prevent;
             } 
 
