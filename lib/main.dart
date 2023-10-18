@@ -47,12 +47,15 @@ class BeestatWidgetState extends State<BeestatWidget> {
         ? 'ios'
         : 'undefined';
 
+    
+
     this.controller = WebViewController()
       ..loadRequest(Uri.parse('https://app.beestat.io?platform=$platform'))
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
           onNavigationRequest: (NavigationRequest request) {
+            showAlertDialog(request.url, context);
             if (request.url.startsWith('data:')) {
               // Download data urls from chart downloads
               saveBase64StringToFile(request.url, 'beestat.png');
@@ -96,6 +99,32 @@ class BeestatWidgetState extends State<BeestatWidget> {
       )
     );
   }
+}
+
+showAlertDialog(String text, BuildContext context) {
+
+  // set up the button
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () { },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Debug"),
+    content: Text(text),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }
 
 Future<void> saveBase64StringToFile(String base64String, String fileName) async {
