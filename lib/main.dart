@@ -65,22 +65,21 @@ class BeestatWidgetState extends State<BeestatWidget> {
               launchUrl(emailLaunchUri);              
               return NavigationDecision.prevent;
             } else if (
-              request.url.startsWith('https://app.beestat.io/api/?resource=ecobee&method=authorize') ||
-              request.url.startsWith('https://app.beestat.io/api/?resource=ecobee&method=initialize') ||
-              request.url.startsWith('https://app.beestat.io/api/ecobee_initialize.php') ||
-              request.url.startsWith('https://api.ecobee.com') ||
-              request.url.startsWith('https://auth.ecobee.com') ||
-              request.url == 'https://app.beestat.io/'
+              request.url.contains('resource=ecobee&method=authorize') ||
+              request.url.contains('resource=ecobee&method=initialize') ||
+              request.url.contains('ecobee_initialize.php') ||
+              request.url.contains('api.ecobee.com') ||
+              request.url.contains('auth.ecobee.com') ||
+              request.url.endsWith('app.beestat.io/') ||
+              request.url.endsWith('app.beestat.io')
             ) {
               // Navigate to these special URLs directly in the WebView
               return NavigationDecision.navigate;
             }
 
-            return NavigationDecision.navigate;
-
             // If no special case, attempt opening the URL in the browser ex: Notion, Amazon, etc.
-            // launchUrl(Uri.parse(request.url), mode: LaunchMode.externalApplication);
-            // return NavigationDecision.prevent;
+            launchUrl(Uri.parse(request.url), mode: LaunchMode.externalApplication);
+            return NavigationDecision.prevent;
           }
         )
       );
