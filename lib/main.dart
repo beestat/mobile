@@ -57,7 +57,7 @@ class BeestatWidgetState extends State<BeestatWidget> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onNavigationRequest: (NavigationRequest request) {
-            this.foo += ' ' + request.url;
+            
             showAlertDialog(this.foo, context);
             if (request.url.startsWith('data:')) {
               // Download data urls from chart downloads
@@ -71,17 +71,19 @@ class BeestatWidgetState extends State<BeestatWidget> {
               launchUrl(emailLaunchUri);              
               return NavigationDecision.prevent;
             } else if (
-              request.url.contains('resource=ecobee&method=authorize') ||
-              request.url.contains('resource=ecobee&method=initialize') ||
-              request.url.contains('ecobee_initialize.php') ||
-              request.url.contains('api.ecobee.com') ||
-              request.url.contains('auth.ecobee.com') ||
-              request.url.endsWith('app.beestat.io/') ||
-              request.url.endsWith('app.beestat.io')
+              request.url.startsWith('https://app.beestat.io/api/?resource=ecobee&method=authorize') ||
+              request.url.startsWith('https://app.beestat.io/api/?resource=ecobee&method=initialize') ||
+              request.url.startsWith('https://app.beestat.io/api/ecobee_initialize.php') ||
+              request.url.startsWith('https://api.ecobee.com') ||
+              request.url.startsWith('https://auth.ecobee.com') ||
+              request.url == 'https://app.beestat.io/?platform='
             ) {
+              this.foo += '|A:' + request.url;
               // Navigate to these special URLs directly in the WebView
               return NavigationDecision.navigate;
             }
+
+            this.foo += '|B:' + request.url;
 
             return NavigationDecision.navigate;
             // If no special case, attempt opening the URL in the browser ex: Notion, Amazon, etc.
