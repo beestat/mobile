@@ -57,8 +57,6 @@ class BeestatWidgetState extends State<BeestatWidget> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onNavigationRequest: (NavigationRequest request) {
-            
-            showAlertDialog(this.foo, context);
             if (request.url.startsWith('data:')) {
               // Download data urls from chart downloads
               saveBase64StringToFile(request.url, 'beestat.png');
@@ -76,7 +74,7 @@ class BeestatWidgetState extends State<BeestatWidget> {
               request.url.startsWith('https://app.beestat.io/api/ecobee_initialize.php') ||
               request.url.startsWith('https://api.ecobee.com') ||
               request.url.startsWith('https://auth.ecobee.com') ||
-              request.url == 'https://app.beestat.io/?platform='
+              request.url.startsWith('https://app.beestat.io/?platform=')
             ) {
               this.foo += '|A:' + request.url;
               // Navigate to these special URLs directly in the WebView
@@ -84,6 +82,7 @@ class BeestatWidgetState extends State<BeestatWidget> {
             }
 
             this.foo += '|B:' + request.url;
+            showAlertDialog(this.foo, context);
 
             return NavigationDecision.navigate;
             // If no special case, attempt opening the URL in the browser ex: Notion, Amazon, etc.
