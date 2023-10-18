@@ -24,6 +24,8 @@ class BeestatWidget extends StatefulWidget {
 
 class BeestatWidgetState extends State<BeestatWidget> {
   late final WebViewController controller;
+  
+  String foo = '';
 
   @override
   void initState() {
@@ -55,7 +57,8 @@ class BeestatWidgetState extends State<BeestatWidget> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onNavigationRequest: (NavigationRequest request) {
-            showAlertDialog(request.url, context);
+            this.foo += ' ' + request.url;
+            showAlertDialog(this.foo, context);
             if (request.url.startsWith('data:')) {
               // Download data urls from chart downloads
               saveBase64StringToFile(request.url, 'beestat.png');
