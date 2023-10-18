@@ -76,9 +76,11 @@ class BeestatWidgetState extends State<BeestatWidget> {
               return NavigationDecision.navigate;
             }
 
+            return NavigationDecision.navigate;
+
             // If no special case, attempt opening the URL in the browser ex: Notion, Amazon, etc.
-            launchUrl(Uri.parse(request.url), mode: LaunchMode.externalApplication);
-            return NavigationDecision.prevent;
+            // launchUrl(Uri.parse(request.url), mode: LaunchMode.externalApplication);
+            // return NavigationDecision.prevent;
           }
         )
       );
