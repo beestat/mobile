@@ -25,7 +25,7 @@ class BeestatWidget extends StatefulWidget {
 class BeestatWidgetState extends State<BeestatWidget> {
   late final WebViewController controller;
   
-  String foo = '';
+  // String foo = '';
 
   @override
   void initState() {
@@ -74,20 +74,21 @@ class BeestatWidgetState extends State<BeestatWidget> {
               request.url.startsWith('https://app.beestat.io/api/ecobee_initialize.php') ||
               request.url.startsWith('https://api.ecobee.com') ||
               request.url.startsWith('https://auth.ecobee.com') ||
-              request.url.startsWith('https://app.beestat.io/?platform=')
+              request.url.startsWith('https://app.beestat.io/?platform=') ||
+              request.url == 'https://app.beestat.io/'
             ) {
-              this.foo += '|A:' + request.url;
+              // this.foo += '|A:' + request.url;
               // Navigate to these special URLs directly in the WebView
               return NavigationDecision.navigate;
             }
 
-            this.foo += '|B:' + request.url;
-            showAlertDialog(this.foo, context);
+            // this.foo += '|B:' + request.url;
+            // showAlertDialog(this.foo, context);
 
-            return NavigationDecision.navigate;
+            // return NavigationDecision.navigate;
             // If no special case, attempt opening the URL in the browser ex: Notion, Amazon, etc.
-            // launchUrl(Uri.parse(request.url), mode: LaunchMode.externalApplication);
-            // return NavigationDecision.prevent;
+            launchUrl(Uri.parse(request.url), mode: LaunchMode.externalApplication);
+            return NavigationDecision.prevent;
           }
         )
       );
