@@ -29,10 +29,11 @@ class BeestatWidgetState extends State<BeestatWidget> {
   void initState() {
     super.initState();
 
-    // bluegray_light
+    /**
+     * The beestat bluegray_light color. This is the background color for most
+     * things and is applied to the status and navigation bar backgrounds.
+     */
     final color = Color.fromRGBO(55, 71, 79, 1);
-
-    // Set the top status bar color
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: color,
@@ -41,6 +42,9 @@ class BeestatWidgetState extends State<BeestatWidget> {
       )
     );
 
+    /**
+     * Determine the current platform, used to add in a query parameter.
+     */
     String platform = Platform.isAndroid
       ? 'android'
       : Platform.isIOS
@@ -48,32 +52,58 @@ class BeestatWidgetState extends State<BeestatWidget> {
         : 'undefined';
 
     this.controller = WebViewController()
-      ..loadRequest(Uri.parse('https://app.beestat.io?platform=$platform'))
+      ..loadRequest(Uri.parse('https://app.beestat.io/?platform=$platform'))
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
           onNavigationRequest: (NavigationRequest request) {
+            print(request.url);
             if (request.url.startsWith('data:')) {
-              // Download data urls from chart downloads
+              /**
+               * This forces chart image downloads (data URLs) to save the file
+               * and open it.
+               */
               saveBase64StringToFile(request.url, 'beestat.png');
               return NavigationDecision.prevent;
             } else if (request.url.startsWith('mailto:')) {
-              final Uri emailLaunchUri = Uri(
+              /**
+               * This ensures the default mail app is launched when opening any
+               * mailto links (ex: contact footer).
+               */
+              launchUrl(Uri(
                 scheme: 'mailto',
                 path: request.url.replaceFirst('mailto:', '')
-              );
-              launchUrl(emailLaunchUri);              
+              ));
               return NavigationDecision.prevent;
             } else if (
               request.url.startsWith('https://app.beestat.io/api/?resource=ecobee&method=authorize') ||
-              request.url.startsWith('https://app.beestat.io/api/?resource=ecobee&method=initialize') ||
+              request.url.startsWith('https://api.ecobee.com') || // https://api.ecobee.com/authorize...
+              request.url.startsWith('https://auth.ecobee.com') || // https://auth.ecobee.com/authorize..., https://auth.ecobee.com/u/login...
               request.url.startsWith('https://app.beestat.io/api/ecobee_initialize.php') ||
-              request.url.startsWith('https://api.ecobee.com') ||
-              request.url.startsWith('https://auth.ecobee.com') ||
-              request.url.startsWith('https://app.beestat.io/?platform=') ||
+              request.url.startsWith('https://app.beestat.io/api/?resource=ecobee&method=initialize') ||
+              request.url.startsWith('https://app.beestat.io/?platform=')
+            ) {
+              /**
+               * These are mostly special navigation steps that happen when
+               * authorizing beestat. These are all caught manually and allowed
+               * to navigate in the current WebView.
+               */
+              return NavigationDecision.navigate;
+            } else if (
               request.url == 'https://app.beestat.io/'
             ) {
-              // Navigate to these special URLs directly in the WebView
+              /**
+               * The original platform query paramater is lost after ecobee
+               * sends the authorization code back to me. The final navigation
+               * request redirects the browser to the main beestat app. This
+               * catches that, and puts the platform back on.
+               */
+              this.controller.loadRequest(Uri.parse('https://app.beestat.io/?platform=$platform'));
+              return NavigationDecision.prevent;
+            } else if (request.url.startsWith('https://app.beestat.io/?platform=')) {
+              /**
+               * Generic catch-all to ensure navigating to "self" is allowed.
+               */
               return NavigationDecision.navigate;
             }
 
