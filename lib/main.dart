@@ -7,8 +7,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 
-List<String> debug = [];
-
 void main() {
   runApp(
     const MaterialApp(
@@ -58,10 +56,15 @@ class BeestatWidgetState extends State<BeestatWidget> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
+          /**
+           * iOS note. Calling loadRequest calls this NavigationDelegate.
+           * Android does not, so be prepared to deal with that and avoid
+           * infinite loops if called inside of itself.
+           * 
+           * For future reference, may be able to set a custom userAgent
+           * or header and use that for detection instead. Thanks, Colin!
+           */
           onNavigationRequest: (NavigationRequest request) {
-            // debug.add(request.url);
-            // print(request.url);
-            // showAlertDialog(debug.join('\n'), context);
             if (request.url.startsWith('data:')) {
               /**
                * This forces chart image downloads (data URLs) to save the file
@@ -155,29 +158,3 @@ Future<void> saveBase64StringToFile(String base64String, String fileName) async 
 
   OpenFile.open(filePath);
 }
-
-// showAlertDialog(String text, BuildContext context) {
-
-//   // set up the button
-//   Widget okButton = TextButton(
-//     child: Text("OK"),
-//     onPressed: () { },
-//   );
-
-//   // set up the AlertDialog
-//   AlertDialog alert = AlertDialog(
-//     title: Text("Debug"),
-//     content: Text(text),
-//     actions: [
-//       okButton,
-//     ],
-//   );
-
-//   // show the dialog
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return alert;
-//     },
-//   );
-// }
