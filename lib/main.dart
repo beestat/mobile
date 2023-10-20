@@ -59,9 +59,9 @@ class BeestatWidgetState extends State<BeestatWidget> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onNavigationRequest: (NavigationRequest request) {
-            debug.add(request.url);
-            print(request.url);
-            showAlertDialog(debug.join('\n'), context);
+            // debug.add(request.url);
+            // print(request.url);
+            // showAlertDialog(debug.join('\n'), context);
             if (request.url.startsWith('data:')) {
               /**
                * This forces chart image downloads (data URLs) to save the file
@@ -93,9 +93,7 @@ class BeestatWidgetState extends State<BeestatWidget> {
                * to navigate in the current WebView.
                */
               return NavigationDecision.navigate;
-            } else if (
-              request.url.startsWith('https://demo.beestat.io')
-            ) {
+            } else if (request.url == 'https://demo.beestat.io/') {
               /**
                * Allow demo logins to navigate in the WebView for app store
                * reviews.
@@ -114,6 +112,7 @@ class BeestatWidgetState extends State<BeestatWidget> {
               this.controller.loadRequest(Uri.parse('https://app.beestat.io/?platform=$platform'));
               return NavigationDecision.prevent;
             } else if (
+              request.url.startsWith('https://demo.beestat.io/?platform=') ||
               request.url.startsWith('https://app.beestat.io/?platform=') ||
               request.url.startsWith('https://app.beestat.io/welcome/?platform=')
             ) {
@@ -157,28 +156,28 @@ Future<void> saveBase64StringToFile(String base64String, String fileName) async 
   OpenFile.open(filePath);
 }
 
-showAlertDialog(String text, BuildContext context) {
+// showAlertDialog(String text, BuildContext context) {
 
-  // set up the button
-  Widget okButton = TextButton(
-    child: Text("OK"),
-    onPressed: () { },
-  );
+//   // set up the button
+//   Widget okButton = TextButton(
+//     child: Text("OK"),
+//     onPressed: () { },
+//   );
 
-  // set up the AlertDialog
-  AlertDialog alert = AlertDialog(
-    title: Text("Debug"),
-    content: Text(text),
-    actions: [
-      okButton,
-    ],
-  );
+//   // set up the AlertDialog
+//   AlertDialog alert = AlertDialog(
+//     title: Text("Debug"),
+//     content: Text(text),
+//     actions: [
+//       okButton,
+//     ],
+//   );
 
-  // show the dialog
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
-}
+//   // show the dialog
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return alert;
+//     },
+//   );
+// }
