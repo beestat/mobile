@@ -109,7 +109,10 @@ class BeestatWidgetState extends State<BeestatWidget> {
                */
               this.controller.loadRequest(Uri.parse('https://app.beestat.io/?platform=$platform'));
               return NavigationDecision.prevent;
-            } else if (request.url.startsWith('https://app.beestat.io/?platform=')) {
+            } else if (
+              request.url.startsWith('https://app.beestat.io/?platform=') ||
+              request.url.startsWith('https://app.beestat.io/welcome/?platform=')
+            ) {
               /**
                * Generic catch-all to ensure navigating to "self" is allowed.
                */
