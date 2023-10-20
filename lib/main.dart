@@ -52,7 +52,7 @@ class BeestatWidgetState extends State<BeestatWidget> {
         : 'undefined';
 
     this.controller = WebViewController()
-      ..loadRequest(Uri.parse('https://app.beestat.io/?platform=$platform'))
+      ..loadRequest(Uri.parse('https://app.beestat.io/welcome/?platform=$platform'))
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
@@ -89,6 +89,15 @@ class BeestatWidgetState extends State<BeestatWidget> {
                * to navigate in the current WebView.
                */
               return NavigationDecision.navigate;
+            } else if (
+              request.url == 'https://demo.beestat.io/'
+            ) {
+              /**
+               * Allow demo logins to navigate in the WebView for app store
+               * reviews.
+               */
+              this.controller.loadRequest(Uri.parse('https://demo.beestat.io/?platform=$platform'));
+              return NavigationDecision.prevent;
             } else if (
               request.url == 'https://app.beestat.io/'
             ) {
