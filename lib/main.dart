@@ -90,7 +90,7 @@ class BeestatWidgetState extends State<BeestatWidget> {
                */
               return NavigationDecision.navigate;
             } else if (
-              request.url == 'https://demo.beestat.io/'
+              request.url.startsWith('https://demo.beestat.io')
             ) {
               /**
                * Allow demo logins to navigate in the WebView for app store
